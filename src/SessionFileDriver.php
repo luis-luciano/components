@@ -6,7 +6,7 @@ class SessionFileDriver
 {
     const PATH = '/../storage/session/';
 
-    public static function load(): array
+    public function load(): array
     {
         $file =  __DIR__ . static::PATH . 'session.json';
 

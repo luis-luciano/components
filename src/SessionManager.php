@@ -4,22 +4,20 @@ namespace LuisLuciano\Components;
 
 class SessionManager
 {
-    protected static bool $loaded = false;
-    protected static array $data = [];
+    protected array $data = [];
 
-    public static function load()
+    public function __construct(protected SessionFileDriver $driver)
     {
-        if (static::$loaded) return;
-
-        static::$data = SessionFileDriver::load();
-
-        static::$loaded = true;
+        $this->load();
     }
 
-    public static function get(string $key)
+    public function load()
     {
-        static::load();
+        $this->data = $this->driver->load();
+    }
 
-        return static::$data[$key] ?? null;
+    public function get(string $key)
+    {
+        return $this->data[$key] ?? null;
     }
 }

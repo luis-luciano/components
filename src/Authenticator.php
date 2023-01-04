@@ -6,23 +6,27 @@ use LuisLuciano\Components\SessionManager as Session;
 
 class Authenticator
 {
-    protected static ?User $user = null;
+    protected ?User $user = null;
 
-    public static function check(): bool
+    public function __construct(protected Session $session)
     {
-        return static::user() != null;
     }
 
-    public static function user(): ?User
+    public function check(): bool
     {
-        if (!is_null(static::$user)) {
-            return static::$user;
+        return $this->user() != null;
+    }
+
+    public function user(): ?User
+    {
+        if (!is_null($this->user)) {
+            return $this->user;
         }
 
-        $data = Session::get('user_data');
+        $data = $this->session->get('user_data');
 
         if (!is_null($data)) {
-            return static::$user = new User($data);
+            return $this->user = new User($data);
         }
 
         return null;

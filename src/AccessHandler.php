@@ -6,8 +6,12 @@ use LuisLuciano\Components\Authenticator as Auth;
 
 class AccessHandler
 {
-    public static function check(string $role)
+    public function __construct(private Auth $auth)
     {
-        return Auth::check() && Auth::user()->role == $role;
+    }
+
+    public function check(string $role)
+    {
+        return $this->auth->check() && $this->auth->user()->role == $role;
     }
 }
