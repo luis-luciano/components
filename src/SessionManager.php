@@ -2,11 +2,13 @@
 
 namespace LuisLuciano\Components;
 
+use LuisLuciano\Components\Contracts\SessionDriverContract;
+
 class SessionManager
 {
     protected array $data = [];
 
-    public function __construct(protected SessionFileDriver $driver)
+    public function __construct(protected SessionDriverContract $driver)
     {
         $this->load();
     }

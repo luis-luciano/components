@@ -2,7 +2,7 @@
 
 namespace LuisLuciano\Components;
 
-use LuisLuciano\Components\Authenticator as Auth;
+use LuisLuciano\Components\Contracts\AuthenticatorContract as Auth;
 
 class AccessHandler
 {
@@ -12,6 +12,6 @@ class AccessHandler
 
     public function check(string $role)
     {
-        return $this->auth->check() && $this->auth->user()->role == $role;
+        return $this->auth->check() && $this->auth?->user()?->role == $role;
     }
 }

@@ -2,7 +2,9 @@
 
 namespace LuisLuciano\Components;
 
-class SessionFileDriver
+use LuisLuciano\Components\Contracts\SessionDriverContract;
+
+class SessionFileDriver implements SessionDriverContract
 {
     const PATH = '/../storage/session/';
 

@@ -2,9 +2,11 @@
 
 namespace LuisLuciano\Components;
 
+use LuisLuciano\Components\Contracts\AuthenticatorContract;
+use LuisLuciano\Components\Models\User;
 use LuisLuciano\Components\SessionManager as Session;
 
-class Authenticator
+class Authenticator implements AuthenticatorContract
 {
     protected ?User $user = null;
 

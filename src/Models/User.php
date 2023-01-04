@@ -1,6 +1,6 @@
 <?php
 
-namespace LuisLuciano\Components;
+namespace LuisLuciano\Components\Models;
 
 class User
 {
