@@ -87,24 +87,20 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
 
-                    <?php //if(Access::check(['student'])): 
-                    ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="students.php">Students</a>
-                    </li>
-                    <?php //endif; 
-                    ?>
+                    <?php if ($access?->check('student')) : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="students.php">Students</a>
+                        </li>
+                    <?php endif; ?>
 
-                    <?php //if(Access::check(['teacher'])): 
-                    ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="teachers.php">Teachers</a>
-                    </li>
-                    <?php //endif; 
-                    ?>
+                    <?php if ($access?->check('teacher')) : ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="teachers.php">Teachers</a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
                 <form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

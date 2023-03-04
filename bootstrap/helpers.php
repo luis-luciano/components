@@ -1,5 +1,7 @@
 <?php
 
+use LuisLuciano\Components\Container;
+
 /**
  * Load the indicated view
  *
@@ -21,4 +23,17 @@ function view(string $template, array $vars = [])
     $templateContent = ob_get_clean();
 
     require("{$path}layout.php");
+}
+
+/**
+ *
+ * @return void
+ */
+function abort404()
+{
+    $access = Container::getInstance()->getAccess();
+
+    http_response_code(404);
+    view('404', compact('access'));
+    exit();
 }

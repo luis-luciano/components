@@ -10,7 +10,12 @@ class AccessHandler
     {
     }
 
-    public function check(string $role)
+    /**
+     * @param string $role
+     *
+     * @return bool
+     */
+    public function check(string $role): bool
     {
         return $this->auth->check() && $this->auth?->user()?->role == $role;
     }
