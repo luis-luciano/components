@@ -2,53 +2,54 @@
 
 namespace LuisLuciano\Components;
 
+use Closure;
+
 class Container
 {
-    protected array $shared = [];
-    protected static Container $container;
+    protected $bindings = [];
+    protected $shared = [];
 
-    public static function getInstance(): Container
+    /**
+     * @param string $name
+     * @param Closure|string $resolver
+     *
+     * @return void
+     */
+    public function bind(string $name, $resolver)
     {
-        if (empty(static::$container)) {
-            static::$container = new Container;
-        }
-
-        return static::$container;
-    }
-
-    public static function set(Container $container)
-    {
-        static::$container = $container;
-    }
-
-    public static function clear()
-    {
-        static::$container = null;
-    }
-
-    public function getSession(): SessionManager
-    {
-        $data = [
-            'user_data' => [
-                'name' => 'Luis',
-                'role' => 'teacher'
-            ]
-        ];
-
-        $driver = new SessionArrayDriver($data);
-        return $this->shared['session'] = new SessionManager($driver);
+        $this->bindings[$name] = ['resolver' => $resolver];
     }
 
     /**
-     * @return Authenticator
+     * @param string $name
+     * @param mixed $object
+     *
+     * @return void
      */
-    public function getAuth(): Authenticator
+    public function instance(string $name, $object)
     {
-        return $this->shared['auth'] ?? $this->shared['auth'] = new Authenticator($this->getSession());
+        $this->shared[$name] = $object;
     }
 
-    public function getAccess(): AccessHandler
+    /**
+     * @param string $name
+     *
+     * @return mixed
+     */
+    public function make(string $name)
     {
-        return $this->shared['access'] ?? $this->shared['access'] = new AccessHandler($this->getAuth());
+        if (array_key_exists($name, $this->shared)) {
+            return $this->shared[$name];
+        }
+
+        $resolver = $this->bindings[$name]['resolver'];
+
+        if ($resolver instanceof Closure) {
+            $object = $resolver($this);
+        } else {
+            $object = new $resolver;
+        }
+
+        return $object;
     }
 }

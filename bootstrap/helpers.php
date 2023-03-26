@@ -1,6 +1,6 @@
 <?php
 
-use LuisLuciano\Components\Container;
+use LuisLuciano\Components\ContainerV1;
 
 /**
  * Load the indicated view
@@ -31,7 +31,7 @@ function view(string $template, array $vars = [])
  */
 function abort404()
 {
-    $access = Container::getInstance()->getAccess();
+    $access = ContainerV1::getInstance()->getAccess();
 
     http_response_code(404);
     view('404', compact('access'));
