@@ -8,6 +8,20 @@ use stdClass;
 
 class Foo
 {
+    public function __construct(Bar $bar)
+    {
+    }
+}
+
+class Bar
+{
+    public function __construct(FooBar $fooBar)
+    {
+    }
+}
+
+class FooBar
+{
 }
 
 class ContainerTest extends TestCase
@@ -36,5 +50,14 @@ class ContainerTest extends TestCase
         $container->bind('key', Foo::class);
 
         $this->assertInstanceOf(Foo::class, $container->make('key'));
+    }
+
+    public function test_bind_with_automatic_resolution()
+    {
+        $container = new Container();
+
+        $container->bind('foo', Foo::class);
+
+        $this->assertInstanceOf(Foo::class, $container->make('foo'));
     }
 }

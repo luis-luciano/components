@@ -3,6 +3,9 @@
 namespace LuisLuciano\Components;
 
 use Closure;
+use InvalidArgumentException;
+use ReflectionClass;
+use ReflectionNamedType;
 
 class Container
 {
@@ -47,9 +50,39 @@ class Container
         if ($resolver instanceof Closure) {
             $object = $resolver($this);
         } else {
-            $object = new $resolver;
+            $object = $this->build($resolver);
         }
 
         return $object;
+    }
+
+    public function build(string $name)
+    {
+        $reflection = new ReflectionClass($name);
+
+        if (!$reflection->isInstantiable()) {
+            throw new InvalidArgumentException("{$name} is not instantiable");
+        }
+
+        $constructor = $reflection->getConstructor();
+
+        if (empty($constructor)) {
+            return new $name;
+        }
+
+        $arguments = [];
+        $constructorParameters = $constructor->getParameters();
+
+        foreach ($constructorParameters as $constructorParameter) {
+            if (!($constructorParameter->getType() instanceof ReflectionNamedType)) {
+                continue;
+            }
+
+            // Get and create instance
+            $parameterClassName = $constructorParameter->getType()->getName();
+            $arguments[] = $this->build($parameterClassName);
+        }
+
+        return $reflection->newInstanceArgs($arguments);
     }
 }
