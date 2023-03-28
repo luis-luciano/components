@@ -3,6 +3,7 @@
 namespace LuisLuciano\Components\Tests;
 
 use LuisLuciano\Components\Container;
+use LuisLuciano\Components\Exceptions\ContainerNotFoundClassException;
 use PHPUnit\Framework\TestCase;
 use stdClass;
 
@@ -22,6 +23,13 @@ class Bar
 
 class FooBar
 {
+}
+
+class Qux
+{
+    public function __construct(Norf $norf)
+    {
+    }
 }
 
 class ContainerTest extends TestCase
@@ -59,5 +67,25 @@ class ContainerTest extends TestCase
         $container->bind('foo', Foo::class);
 
         $this->assertInstanceOf(Foo::class, $container->make('foo'));
+    }
+
+    public function test_expected_container_exception_if_dependency_does_not_exist()
+    {
+        $this->expectException(ContainerNotFoundClassException::class);
+
+        $container = new Container();
+
+        $container->bind('qux', Qux::class);
+
+        $container->make('qux');
+    }
+
+    public function test_class_does_not_exist()
+    {
+        $this->expectException(ContainerNotFoundClassException::class);
+
+        $container = new Container();
+
+        $container->make('Norf');
     }
 }

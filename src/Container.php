@@ -4,7 +4,9 @@ namespace LuisLuciano\Components;
 
 use Closure;
 use InvalidArgumentException;
+use LuisLuciano\Components\Exceptions\ContainerNotFoundClassException;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionNamedType;
 
 class Container
@@ -45,7 +47,7 @@ class Container
             return $this->shared[$name];
         }
 
-        $resolver = $this->bindings[$name]['resolver'];
+        $resolver = $this->bindings[$name]['resolver'] ?? $name;
 
         if ($resolver instanceof Closure) {
             $object = $resolver($this);
@@ -58,7 +60,11 @@ class Container
 
     public function build(string $name)
     {
-        $reflection = new ReflectionClass($name);
+        try {
+            $reflection = new ReflectionClass($name);
+        } catch (ReflectionException $e) {
+            throw new ContainerNotFoundClassException("The name: [$name] must be a class. " . $e->getMessage(), 500, $e);
+        }
 
         if (!$reflection->isInstantiable()) {
             throw new InvalidArgumentException("{$name} is not instantiable");
